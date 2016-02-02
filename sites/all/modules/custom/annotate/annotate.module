@@ -50,3 +50,25 @@ function annotate_node_load($nodes, $types){
         }
     }
 }
+
+/**
+ * Implements hook_trigger_info().
+ */
+function annotate_trigger_info(){
+    return [
+        'annotate' => [
+            'annotate_insert' => [
+                'label' => t('After saving new annotations')
+            ],
+            'annotate_update' => [
+                'label' => t('After saving updated annotations')
+            ],
+            'annotate_delete' => [
+                'label' => t('After deleting annotations')
+            ],
+            'annotate_view' => [
+                'label' => t('When annotation is viewwed by an authenticated user')
+            ]
+        ]
+    ];
+}
