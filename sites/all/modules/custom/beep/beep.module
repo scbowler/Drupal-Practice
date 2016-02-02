@@ -1,0 +1,78 @@
+<?php
+/**
+ * @file
+ * Provide a simulated beep.
+ */
+
+function beep_beep() {
+    watchdog('beep', 'Beep!');
+}
+
+/**
+ * Implementation of hook_action_info()
+ */
+function beep_action_info(){
+    return [
+        'beep_beep_action' => [
+            'type' => 'system',
+            'label' => t('Road Runner afy'),
+            'configurable' => false,
+            'triggers' => ['node_view', 'node_insert', 'node_update', 'node_delete']
+        ],
+        'beep_multiple_beep_action' => [
+            'type' => 'system',
+            'label' => t('Beep Beep a lot'),
+            'configurable' => true,
+            'triggers' => ['node_view', 'node_insert', 'node_update', 'node_delete']
+        ]
+    ];
+}
+
+/**
+ * Simulate a beep. A Drupal action.
+ */
+function beep_beep_action() {
+    beep_beep();
+}
+
+/**
+ * Form for configurable Drupal action to beep multiple times
+ */
+function beep_multiple_beep_action_form($context){
+    $form['beeps'] = [
+        '#type' => 'textfield',
+        '#title' => t('Number of beeps'),
+        '#description' => t('Enter the number of times to beep when this action executes'),
+        '#default_value' => isset($context['beeps']) ? $context['beeps'] : '1',
+        '#required' => true
+    ];
+    return $form;
+}
+
+function beep_multiple_beep_action_validate($form, $form_state){
+    $beeps = $form_state['values']['beeps'];
+    if(!is_numeric($beeps)){
+        form_set_error('beeps', t('Please enter a whole number between 0 and 10, you hear.'));
+    }
+    else if((int) $beeps > 10){
+        form_set_error('beeps', t("$beeps That's just crazy, lets tone it down a bit. Stay under 10."));
+    }
+    else if((int) $beeps < 0){
+        form_set_error('beeps', t('Trying to bring down the system?!?! Please use a positive integer'));
+    }
+}
+
+function beep_multiple_beep_action_submit($form, $form_state) {
+    return [
+        'beeps' => (int)$form_state['values']['beeps']
+    ];
+}
+
+/**
+ * Configurable action. Beeps a specified number of times
+ */
+function beep_multiple_beep_action($object, $context){
+    for($i = 0; $i < $context['beeps']; $i++){
+        beep_beep();
+    }
+}
