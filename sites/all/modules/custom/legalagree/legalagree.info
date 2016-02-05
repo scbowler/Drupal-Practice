@@ -1,0 +1,5 @@
+name = Legal Agreement
+description = Displays a dubious legal agreement during user registration.
+package = Scott's Drupal Dev
+core = 7.x
+files[] = legalagree.module
